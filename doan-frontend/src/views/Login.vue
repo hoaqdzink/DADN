@@ -1,25 +1,34 @@
 <template>
   <main>
     <div class="login-form">
-      <form>
+      <form @submit.prevent>
         <h1>Login</h1>
         <div class="content">
           <div class="input-field">
-            <input type="email" placeholder="Email" autocomplete="nope">
+            <input type="email" placeholder="Email" name="email" v-model="form.email">
           </div>
           <div class="input-field">
-            <input type="password" placeholder="Password" autocomplete="new-password">
+            <input type="password" placeholder="Password" name="password" v-model="form.password">
           </div>
           <a href="#" class="link">Forgot Your Password?</a>
         </div>
         <div class="action">
           <button>Register</button>
-          <button>Sign in</button>
+          <button @click="signIn">Sign in</button>
         </div>
       </form>
     </div>
   </main>
 </template>
+
+<script setup>
+import { reactive } from "vue"
+let form = reactive({ email: "", password: "" })
+
+function signIn() {
+  console.log(form)
+}
+</script>
 
 <style scoped>
 * {
