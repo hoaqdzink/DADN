@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import LocalStorageWorker from "@/common/storageHelper";
+import LocalStorageWorker from "@/common/storageHelper"
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),

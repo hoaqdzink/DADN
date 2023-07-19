@@ -1,7 +1,7 @@
 <template>
   <main>
     <div class="login-form">
-      <form @submit.prevent>
+      <form @submit.prevent v-on:keyup.enter="signIn">
         <h1>Login</h1>
         <div class="content">
           <div class="input-field">
@@ -23,10 +23,17 @@
 
 <script setup>
 import { reactive } from "vue"
+import HTTPService from "@/common/HTTP";
+import LocalStorageWorker from "@/common/storageHelper";
 let form = reactive({ email: "", password: "" })
 
-function signIn() {
-  console.log(form)
+async function signIn() {
+  let response = await HTTPService.login(form)
+  if (response.status===200){
+    LocalStorageWorker.setToken(response.data.token)
+  } else {
+    alert(response.data.message)
+  }
 }
 </script>
 
