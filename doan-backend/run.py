@@ -40,23 +40,19 @@ def upgrade_db():
     upgrade_database(app)
 
 
-def get_env(env: str):
+def get_env():
     load_dotenv(".env")
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.set_defaults(func=run)
-
-    subparsers = parser.add_subparsers(help="sub commands")
-
-    parser_migrate = subparsers.add_parser("migrate", help="Create new migrate version")
-    parser_migrate.set_defaults(func=migrate)
-
-    parser_upgrade_db = subparsers.add_parser(
-        "migrate up", help="Upgrade db to the current schema version"
-    )
-    parser_upgrade_db.set_defaults(func=upgrade_db)
-
+    parser.add_argument('--mode', type=str, help='default: run; migrate or migrate up',
+                    choices=['migrate', 'migrate up'])
+    
     args = parser.parse_args()
-    args.func(args)
+    if args.mode == "migrate":
+        migrate()
+    elif args.mode == "migrate up":
+        upgrade_db()
+    else:
+        run()

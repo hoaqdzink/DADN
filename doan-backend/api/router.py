@@ -8,10 +8,10 @@ from api.handler import (
 bp = Blueprint("default", __name__)
 
 bp.add_url_rule(
-    "/login", view_func=auth.analysis_login, methods=["POST"], endpoint="login"
+    "/login", view_func=auth.login, methods=["POST"], endpoint="login"
 )
 
 
 @bp.before_request
 def before_request():
-    return middleware.admin_check_auth()
+    return middleware.check_auth()
