@@ -1,6 +1,6 @@
 from db.repository import users
-from pkg import hash, jwt
-from typing import Tuple
+from pkg import hash, token
+
 
 def check_auth(token):
     return True
@@ -11,9 +11,10 @@ def login_by_email_password(email, password):
     if user_info is None:
         print(f"{email} not exist")
         return False, None
-    
+
     if hash.verify_pass(password, user_info.password):
-        token = jwt.get_token(None)
-        return True, token
+        data = {"id": user_info.id}
+        tk = token.get_token(data)
+        return True, tk
 
     return False, None

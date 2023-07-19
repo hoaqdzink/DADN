@@ -1,11 +1,9 @@
 import os
 
 
-JWT_EXPIRY = 24
-
-
 class Config(object):
-    JWT_EXPIRY = os.getenv("JWT_EXPIRY") or JWT_EXPIRY
+    JWT_EXPIRY = int(os.getenv("JWT_EXPIRY"))
+    JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY")
 
     # DB information
     DB_HOST = os.getenv("DB_HOST")

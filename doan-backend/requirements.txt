@@ -3,3 +3,4 @@ flask_cors
 Flask-Migrate
 python-dotenv
 mysqlclient
+PyJWT
