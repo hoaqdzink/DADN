@@ -4,7 +4,8 @@
 const int DHTPIN = 2;        // Read data from DHT11 at D2 in Arduino Board
 const int DHTTYPE = DHT11;   // Declare Sensor Type: DHT11 and DHT22
 const int outPin = 4;        // D4 for monitoring and controlling Motor
-const int thresholdTmp = 27; // Threshold of temperature for running or stopping motor
+const int thresholdTmp = 35; // Threshold of temperature for running or stopping motor
+int userType = 0;            // Mode: 0:Manually, Mode: 1:Automatically
 
 DHT dht(DHTPIN, DHTTYPE);
 
@@ -15,15 +16,28 @@ void setup()
   pinMode(outPin, OUTPUT);
 }
 
+void stopMotor()
+{
+  digitalWrite(outPin, LOW);
+}
+
+void startMotor()
+{
+  digitalWrite(outPin, HIGH);
+}
+
 void checkTemperature(float t)
 {
-  if (t > thresholdTmp)
+  if (userType == 1)
   {
-    digitalWrite(outPin, HIGH);
-  }
-  else
-  {
-    digitalWrite(outPin, LOW);
+    if (t > thresholdTmp)
+    {
+      startMotor();
+    }
+    else
+    {
+      stopMotor();
+    }
   }
 }
 
@@ -34,7 +48,7 @@ void exportSerialPort(float h, float t, bool motorFbk)
   Serial.print(",");
   Serial.print(h);
   Serial.print(",");
-  Serial.print(digitalRead(outPin));
+  Serial.print(motorFbk);
   Serial.println();
 }
 
@@ -46,12 +60,33 @@ void getData(float &h, float &t, bool &motorFbk)
   motorFbk = digitalRead(outPin);
 }
 
+void processReadSerial()
+{
+  String serialRead;
+  serialRead = Serial.readString();
+  if (serialRead[0] == '0')
+  {
+    if (serialRead[1] == '0')
+      stopMotor();
+    if (serialRead[1] == '1')
+      startMotor();
+  }
+  if (serialRead[0] == '1')
+  {
+    if (serialRead[1] == '0')
+      userType = 0;
+    if (serialRead[1] == '1')
+      userType = 1;
+  }
+}
+
 void loop()
 {
   float h, t;
   bool motorFbk;
   getData(h, t, motorFbk);
   checkTemperature(t);
-  exportSerialPort(h, t, digitalRead(outPin));
+  exportSerialPort(h, t, motorFbk);
+  processReadSerial();
   delay(1000); // Wait 1 second
 }

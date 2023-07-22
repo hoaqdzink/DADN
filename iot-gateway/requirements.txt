@@ -1,2 +1,3 @@
 adafruit-io
 python-dotenv
+pyserial
