@@ -1,5 +1,5 @@
 from db.repository import users
-from pkg import hash, token
+from pkg import hash, token_helper
 
 
 def check_auth(token):
@@ -14,7 +14,7 @@ def login_by_email_password(email, password):
 
     if hash.verify_pass(password, user_info.password):
         data = {"id": user_info.id}
-        tk = token.get_token(data)
+        tk = token_helper.get_token(data)
         return True, tk
 
     return False, None
