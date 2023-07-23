@@ -5,5 +5,9 @@ from usecase import auth
 
 def check_auth():
     if request.endpoint != "default.login":
-        if not auth.check_auth():
+        headers = request.headers
+        if "Authorization" not in headers:
+            return response_unauthorized({"message": "Not found token"})
+        token = headers.get("Authorization")
+        if not auth.check_auth(token):
             return response_unauthorized()

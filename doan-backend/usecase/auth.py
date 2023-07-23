@@ -3,7 +3,18 @@ from pkg import hash, token_helper
 
 
 def check_auth(token):
-    return True
+    try:
+        token = token.replace("Bearer ", "")
+        data = token_helper.decode_token(token)
+        id = data.get("id")
+        user = users.get_user_by_id(id)
+        if not user:
+            return False
+        return True
+
+    except Exception as e:
+        print(e)
+        return False
 
 
 def login_by_email_password(email, password):

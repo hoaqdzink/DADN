@@ -4,6 +4,7 @@ from flask import Response, jsonify
 def response(body, code):
     return jsonify(body), code
 
+
 def response_success(body):
     # Use for successful request
     if body is not None:
@@ -28,13 +29,22 @@ def response_bad_request(body=None):
         return response(body, 400)
     else:
         return response({"message": "Bad Request"}, 400)
-    
+
+
 def response_unauthorized(body=None):
     # Use for unathorized request
     if body is not None:
         return response(body, 401)
     else:
         return response({"message": "Unauthorized"}, 401)
+
+
+def response_server_error(body=None):
+    # Use for Server Error
+    if body is not None:
+        return response(body, 500)
+    else:
+        return response({"message": "Server Error"}, 500)
 
 
 def error(message: str, code):
