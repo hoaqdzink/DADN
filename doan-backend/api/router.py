@@ -1,4 +1,4 @@
-from flask import Blueprint
+from flask import Blueprint, request
 
 from api.handler import auth, middleware, analyze
 
@@ -22,4 +22,7 @@ bp.add_url_rule(
 
 @bp.before_request
 def before_request():
-    return middleware.check_auth()
+    if request.method == "OPTIONS":
+        pass
+    else:
+        return middleware.check_auth()
