@@ -19,6 +19,13 @@ bp.add_url_rule(
     endpoint="add_motor_ctrl",
 )
 
+bp.add_url_rule(
+    "/stream",
+    view_func=analyze.stream,
+    methods=["GET"],
+    endpoint="stream",
+)
+
 
 @bp.before_request
 def before_request():

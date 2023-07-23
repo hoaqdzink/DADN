@@ -1,4 +1,6 @@
 from flask import request
+import time
+import json
 from api.handler.api_response import (
     response_bad_request,
     response_server_error,
@@ -31,3 +33,12 @@ def add_motor_ctrl():
     if not is_success:
         return response_server_error()
     return response_created({"mode": value})
+
+
+def stream():
+    data = analyze.get_data_with_range()
+    yield json.dumps(data)
+    while True:
+        time.sleep(10)
+        data = analyze.get_latest_data()
+        yield json.dumps(data)

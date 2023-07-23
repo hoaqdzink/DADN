@@ -46,6 +46,14 @@ class HTTPService {
       return e.response
     }
   }
+  async stream() {
+    let token = LocalStorageWorker.getToken()
+    const response = await fetch('http://localhost:5000/stream', {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      }
+    })
+    return response
+  }
 }
-
 export default new HTTPService()

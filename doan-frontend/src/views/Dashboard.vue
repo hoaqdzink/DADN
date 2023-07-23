@@ -23,10 +23,39 @@
 </template>
 
 <script setup>
-import { reactive } from "vue"
+import { reactive, onMounted } from "vue"
 import HTTPService from "@/common/HTTP"
 let buttons = reactive({ mode: 0, motorCtrl: 0 })
 let system = reactive({ temp: [], humid: [], motor: false })
+
+onMounted(async () => {
+  let response = await HTTPService.stream()
+  handleStreamData(response)
+})
+
+
+function handleStreamData(response) {
+  const reader = response.body.getReader();
+  const decoder = new TextDecoder();
+
+  function readChunk() {
+    reader.read().then(({ done, value }) => {
+      if (done) {
+        return;
+      }
+
+      let text = decoder.decode(value, { stream: true });
+      let datas = JSON.parse(text)
+      system.motor = datas.aio_feed_motor_fbk.value == "1"
+      console.log(datas)
+
+      // Read the next chunk
+      readChunk();
+    });
+  }
+
+  readChunk();
+}
 
 async function toggleMode() {
   let tmp = null
@@ -43,6 +72,7 @@ async function toggleMotor() {
   let response = await HTTPService.add_motor_ctrl(tmp.toString())
   if (response.status == 201) buttons.motorCtrl = tmp
 }
+
 </script>
 
 <style scoped>
