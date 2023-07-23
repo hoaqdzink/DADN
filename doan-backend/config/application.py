@@ -34,11 +34,3 @@ def init_app() -> Flask:
     app = register_blueprint(app)
 
     return app
-
-    app = Flask(__name__, static_folder="../static", template_folder="../templates")
-    app.config.from_object(test_config)
-    CORS(app)  # TODO: ensure correct security for CORS
-    configure_database(app)
-    app = register_blueprint(app)
-
-    return app

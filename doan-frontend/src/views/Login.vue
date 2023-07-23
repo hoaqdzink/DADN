@@ -23,14 +23,16 @@
 
 <script setup>
 import { reactive } from "vue"
-import HTTPService from "@/common/HTTP";
-import LocalStorageWorker from "@/common/storageHelper";
+import HTTPService from "@/common/HTTP"
+import LocalStorageWorker from "@/common/storageHelper"
+import router from "@/router/index"
 let form = reactive({ email: "", password: "" })
 
 async function signIn() {
   let response = await HTTPService.login(form)
-  if (response.status===200){
+  if (response.status === 200) {
     LocalStorageWorker.setToken(response.data.token)
+    router.push('/dashboard')
   } else {
     alert(response.data.message)
   }
