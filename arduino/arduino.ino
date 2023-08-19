@@ -4,7 +4,9 @@
 const int DHTPIN = 2;        // Read data from DHT11 at D2 in Arduino Board
 const int DHTTYPE = DHT11;   // Declare Sensor Type: DHT11 and DHT22
 const int outPin = 4;        // D4 for monitoring and controlling Motor
+const int ledPin = 8;        // D7 for controlling Led
 const int thresholdTmp = 35; // Threshold of temperature for running or stopping motor
+const int ledThresholdTmp = 30; // Threshold of temperature for turning led on
 int userType = 0;            // Mode: 0:Manually, Mode: 1:Automatically
 
 DHT dht(DHTPIN, DHTTYPE);
@@ -14,6 +16,7 @@ void setup()
   Serial.begin(9600);
   dht.begin(); // Start Sensor
   pinMode(outPin, OUTPUT);
+  pinMode(ledPin, OUTPUT);
 }
 
 void stopMotor()
@@ -24,6 +27,16 @@ void stopMotor()
 void startMotor()
 {
   digitalWrite(outPin, HIGH);
+}
+
+void turnLedOn()
+{
+  digitalWrite(ledPin, HIGH);
+}
+
+void turnLedOff()
+{
+  digitalWrite(ledPin, LOW);
 }
 
 void checkTemperature(float t)
@@ -39,6 +52,14 @@ void checkTemperature(float t)
       stopMotor();
     }
   }
+  if (t > ledThresholdTmp)
+    {
+      turnLedOn();
+    }
+    else
+    {
+      turnLedOff();
+    }
 }
 
 void exportSerialPort(float h, float t, bool motorFbk)
