@@ -33,6 +33,13 @@ bp.add_url_rule(
     endpoint="set_notification",
 )
 
+bp.add_url_rule(
+    "/get_config",
+    view_func=config.get_config,
+    methods=["GET"],
+    endpoint="get_config",
+)
+
 
 @bp.before_request
 def before_request():

@@ -33,3 +33,8 @@ def set_notification_by_id(id, mode):
         return True
     except Exception as e:
         return False
+
+
+def get_is_notified_by_id(id):
+    results = session.query(Users.is_notified).filter_by(id=id).all()
+    return results[0].is_notified if len(results) > 0 else None

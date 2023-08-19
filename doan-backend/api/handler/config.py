@@ -18,3 +18,14 @@ def set_notification(mode):
         return api_response.response_server_error()
 
     return api_response.response_no_content()
+
+
+def get_config():
+    headers = request.headers
+    token = headers.get("Authorization").replace("Bearer ", "")
+    user = token_helper.decode_token(token)
+    id = user.get("id")
+
+    config = usecase_config.get_config(id)
+
+    return api_response.response_success(config)
