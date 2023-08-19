@@ -20,13 +20,24 @@
     <span class="tittle">Motor: </span>
     <div class="round" :class="system.motor ? 'active' : 'disabled'"></div>
   </div>
+  <div class="chart-container">
+    <div class="chart">
+      <Chart title="Temperature" unit="Celsius" :points="system.temp" />
+    </div>
+    <div class="chart">
+      <Chart title="Humidity" unit="g.me-3" :points="system.humid" />
+    </div>
+  </div>
 </template>
 
 <script setup>
 import { reactive, onMounted } from "vue"
 import HTTPService from "@/common/HTTP"
+import Chart from "../components/chart.vue";
+
 let buttons = reactive({ mode: 0, motorCtrl: 0 })
 let system = reactive({ temp: [], humid: [], motor: false })
+let timeOrigin = Date.now()
 
 onMounted(async () => {
   let response = await HTTPService.stream()
@@ -47,7 +58,8 @@ function handleStreamData(response) {
       let text = decoder.decode(value, { stream: true });
       let datas = JSON.parse(text)
       system.motor = datas.aio_feed_motor_fbk.value == "1"
-      console.log(datas)
+      system.temp.push({ x: Date.now() - timeOrigin, y: datas.temp[0].value })
+      system.humid.push({ x: Date.now() - timeOrigin, y: datas.humid[0].value })
 
       // Read the next chunk
       readChunk();
@@ -105,6 +117,19 @@ span.tittle {
 
 .round.disabled {
   background: #8D8D8D
+}
+
+.chart-container {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+  margin-top: 30px;
+}
+
+.chart {
+  width: 1000px;
+  height: 500px;
 }
 </style>
 
