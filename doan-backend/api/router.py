@@ -1,6 +1,6 @@
 from flask import Blueprint, request
 
-from api.handler import auth, middleware, analyze
+from api.handler import auth, middleware, analyze, config
 
 bp = Blueprint("default", __name__)
 
@@ -24,6 +24,13 @@ bp.add_url_rule(
     view_func=analyze.stream,
     methods=["GET"],
     endpoint="stream",
+)
+
+bp.add_url_rule(
+    "/set_notification/<mode>",
+    view_func=config.set_notification,
+    methods=["PUT"],
+    endpoint="set_notification",
 )
 
 

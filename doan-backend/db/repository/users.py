@@ -24,3 +24,12 @@ def get_notified_email():
     for result in results:
         emails.append(result.email)
     return emails
+
+
+def set_notification_by_id(id, mode):
+    try:
+        session.query(Users).filter(Users.id == id).update({"is_notified": mode})
+        session.commit()
+        return True
+    except Exception as e:
+        return False
