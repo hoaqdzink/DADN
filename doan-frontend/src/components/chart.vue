@@ -3,7 +3,7 @@
 </template>
 
 <script setup>
-import { lightningChart, SolidFill, SolidLine, AxisScrollStrategies, ColorRGBA, Themes, AxisTickStrategies } from '@arction/lcjs'
+import { lightningChart, AxisScrollStrategies, ColorRGBA, Themes, AxisTickStrategies } from '@arction/lcjs'
 import { onMounted, onBeforeMount, onBeforeUnmount, defineProps, watch } from 'vue';
 
 const props = defineProps(['points', 'title', 'unit'])
@@ -36,6 +36,7 @@ function createChart() {
         .setName(props.title)
         .setStrokeStyle((style) => style.setThickness(5))
         .setMouseInteractions(false)
+        .add(props.points)
 
     chart
         .addLegendBox()
@@ -58,7 +59,6 @@ onMounted(() => {
 onBeforeUnmount(() => { chart.dispose() })
 
 watch(() => props.points, (newValue) => {
-    console.log(newValue)
     lineSeries.add(newValue);
 }, { deep: true });
 
