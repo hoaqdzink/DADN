@@ -5,3 +5,5 @@ python-dotenv
 mysqlclient
 PyJWT
 adafruit-io
+APScheduler
+pg8000
